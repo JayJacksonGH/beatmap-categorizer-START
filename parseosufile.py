@@ -1,6 +1,6 @@
 import urllib.request
 import math
-mapid = "890326"
+mapid = "5265850"
 map = urllib.request.urlopen("https://osu.ppy.sh/osu/" + mapid).read().decode("utf-8")
 osumaptext = map.split("[HitObjects]")[1].split("\n")
 
@@ -36,4 +36,11 @@ for i, line in enumerate(osumaptext):
         print(store.x, store.y, store.time, store.type, store.sliderParam)
         hitobjects.append(store)
 
-print(hitobjects[0].sliderParam)
+
+class parameters:
+    def __init__(self, x1, y1, x2, y2, time1, time2):
+        self.distance = math.sqrt((int(x1)-int(x2))^2 + (int(y1)-int(y2))^2)
+        self.deltatime = int(time2) - int(time1)
+
+test = parameters(hitobjects[0].x, hitobjects[0].y, hitobjects[1].x, hitobjects[1].y, hitobjects[0].time, hitobjects[1].time)
+print(test.distance, test.deltatime)
