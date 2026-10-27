@@ -33,14 +33,23 @@ for i, line in enumerate(osumaptext):
         elif objecttype & 8:
             objecttype = hitObjectTypes[3]
         store = hitobject(osuobject[0], osuobject[1], osuobject[2], objecttype, osuobject[5]) 
-        print(store.x, store.y, store.time, store.type, store.sliderParam)
+        #print(store.x, store.y, store.time, store.type, store.sliderParam)
         hitobjects.append(store)
 
-
-class parameters:
+twohitobjects = []
+class twoobjectvalues:
     def __init__(self, x1, y1, x2, y2, time1, time2):
-        self.distance = math.sqrt((int(x1)-int(x2))^2 + (int(y1)-int(y2))^2)
+        dx = int(x2)-int(x1)
+        dy = int(y2)-int(y1)
+        self.distance = math.sqrt((dx)**2 + (dy)**2)
         self.deltatime = int(time2) - int(time1)
+        self.angle = math.degrees(math.atan2(dy, dx))
+        self.dx = abs(dx)
+        self.dy = abs(dy)
+        if self.deltatime > 0:
+            self.speed = self.distance / self.deltatime
+        else:
+            self.speed = 0
 
-test = parameters(hitobjects[0].x, hitobjects[0].y, hitobjects[1].x, hitobjects[1].y, hitobjects[0].time, hitobjects[1].time)
-print(test.distance, test.deltatime)
+test = twoobjectvalues(hitobjects[0].x, hitobjects[0].y, hitobjects[1].x, hitobjects[1].y, hitobjects[0].time, hitobjects[1].time)
+print(test.distance, test.deltatime, test.angle, test.dx, test.dy, test.speed)
