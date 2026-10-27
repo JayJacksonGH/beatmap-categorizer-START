@@ -1,25 +1,39 @@
 import urllib.request
 import math
-mapid = "5949203"
+mapid = "890326"
 map = urllib.request.urlopen("https://osu.ppy.sh/osu/" + mapid).read().decode("utf-8")
 osumaptext = map.split("[HitObjects]")[1].split("\n")
 
-class hitobjectdifference:
-    def __init__(self, x1, y1, x2, y2, time1, time2, type1, type2):
-        self.distance = math.sqrt((int(x1)-int(x2))**2 + (int(y1)-int(y2))**2)
-        self.timediff = int(time2) - int(time1)
+class hitobject:
+    def __init__(self, x, y, time, type, sliderParam):
+        self.x = x
+        self.y = y
+        self.time = time
+        self.type = type
+        if any(l in sliderParam for l in ["B", "C", "L", "P"]):
+            self.sliderParam = sliderParam
+        else:
+            self.sliderParam = None
 
-test = hitobjectdifference(1, 1, 2, 2, 1000, 2000, 1, 1)
-print(test.distance)
-print(len(osumaptext))
-
+hitObjectTypes = {
+    0: "circle",
+    1: "slider",
+    3: "spinner",
+}
+hitobjects = []
 for i, line in enumerate(osumaptext):
     osuobject = osumaptext[i].split(",")
-    if line.strip(osuobject):
-        difficultymeasure = 
-osuobject = osumaptext[1].split(",")
-x = int(osuobject[0])
-y = int(osuobject[1])
-time = int(osuobject[2])
-objecttype = format(int(osuobject[3]), "08b")
+    if line.strip():
+        objecttype = format(int(osuobject[3]), "08b")
+        objecttype = int(objecttype)
+        if objecttype & 1:
+            objecttype = hitObjectTypes[0]
+        elif objecttype & 2:
+            objecttype = hitObjectTypes[1]
+        elif objecttype & 8:
+            objecttype = hitObjectTypes[3]
+        store = hitobject(osuobject[0], osuobject[1], osuobject[2], objecttype, osuobject[5]) 
+        print(store.x, store.y, store.time, store.type, store.sliderParam)
+        hitobjects.append(store)
 
+print(hitobjects[0].sliderParam)
